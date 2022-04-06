@@ -1,9 +1,12 @@
 {% extends "common/layout.html" %}
 
+
 {% block content %}
+
 
 <div class="container">
     <h1>Hello Flask!!</h1>
+    <img src="{{ url_for('static', filename='images/image010.jpg') }}">
 </div>
 
 {% endblock %}
