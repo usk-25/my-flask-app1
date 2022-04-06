@@ -4,8 +4,36 @@
 {% block content %}
 
 
-<div class="container">
-    <h1>一覧ページ</h1>
+<div class="container mt-4">
+    <h3>ToDoリスト</h3>
+    <table class="table table-dark table-striped table-hover">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">予定</th>
+                <th scope="col">期日</th>
+                <th scope="col"></th>
+                <th scope="col"></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td>予定1</td>
+                <td>2022-04-10</td>
+                <td>
+                    <form action="" method="POST">
+                        <input class="btn btn-primary btn-sm" type="submit" value="編集">
+                    </form>
+                </td>
+                <td>
+                    <form action="" method="POST">
+                        <input class="btn btn-outline-danger btn-sm" type="submit" value="削除">
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 
 {% endblock %}
