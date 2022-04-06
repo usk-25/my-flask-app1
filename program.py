@@ -60,18 +60,61 @@ def list():
     return render_template('list.html', data=data)
 
 
-# @app.route('/list/<int:id>')
-# def todo_delete(id):
-#     return render_template('list.html')
+@app.route('/edit', methods=['POST'])
+def edit():
+    id = request.form.get('ID', type=int)
+    toDo = request.form['toDoInput']
+    limitDate = request.form['toDoDate']
+
+    # DBコネクション
+    con = get_db()
+
+    # 更新処理
+    sql = "UPDATE todolist SET TODO = '{}', LIMITDATE = '{}',  UPDATED_AT = datetime('now', 'localtime') WHERE ID = {};".format(
+        toDo, limitDate, id)
+    con.execute(sql)
+    con.commit()
+
+    # データの再読み込み
+    cur = con.execute(
+        "SELECT ID, TODO, LIMITDATE FROM todolist ORDER BY ID")
+    data = cur.fetchall()
+    con.close()
+
+    return render_template('list.html', data=data)
 
 
-# @app.route('/list/<int:id>/edit', methods=['POST'])
-# def todo_edit(id):
-#     return render_template('edit.html')
+@app.route('/list/<int:id>/delete', methods=['POST'])
+def todo_delete(id):
+    # DBコネクション
+    con = get_db()
 
-# @app.route('/edit')
-# def add():
-#     return render_template('edit.html')
+    # 削除処理
+    sql = "DELETE FROM todolist WHERE ID = {};".format(id)
+    con.execute(sql)
+    con.commit()
+
+    # データの再読み込み
+    cur = con.execute(
+        "SELECT ID, TODO, LIMITDATE FROM todolist ORDER BY ID")
+    data = cur.fetchall()
+    con.close()
+
+    return render_template('list.html', data=data)
+
+
+@app.route('/list/<int:id>/edit', methods=['POST'])
+def todo_edit(id):
+    # DBコネクション
+    con = get_db()
+
+    # データの読み込み
+    sql = "SELECT ID, TODO, LIMITDATE FROM todolist WHERE ID = {};".format(id)
+    cur = con.execute(sql)
+    data = cur.fetchall()
+    con.close()
+
+    return render_template('edit.html', data=data)
 
 
 if __name__ == '__main__':
