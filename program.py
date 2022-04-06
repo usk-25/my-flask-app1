@@ -44,7 +44,7 @@ def add():
 
         # データの再読み込み
         cur = con.execute(
-            "SELECT ID, TODO, LIMITDATE FROM todolist ORDER BY ID")
+            "SELECT ID, TODO, LIMITDATE, (julianday(LIMITDATE) - julianday(CURRENT_TIMESTAMP)) FROM todolist ORDER BY LIMITDATE")
         data = cur.fetchall()
         con.close()
 
@@ -54,7 +54,8 @@ def add():
 @app.route('/list')
 def list():
     con = get_db()
-    cur = con.execute("SELECT ID, TODO, LIMITDATE FROM todolist ORDER BY ID")
+    cur = con.execute(
+        "SELECT ID, TODO, LIMITDATE, (julianday(LIMITDATE) - julianday(CURRENT_TIMESTAMP)) FROM todolist ORDER BY LIMITDATE")
     data = cur.fetchall()
     con.close()
     return render_template('list.html', data=data)
@@ -77,7 +78,7 @@ def edit():
 
     # データの再読み込み
     cur = con.execute(
-        "SELECT ID, TODO, LIMITDATE FROM todolist ORDER BY ID")
+        "SELECT ID, TODO, LIMITDATE, (julianday(LIMITDATE) - julianday(CURRENT_TIMESTAMP)) FROM todolist ORDER BY LIMITDATE")
     data = cur.fetchall()
     con.close()
 
@@ -96,7 +97,7 @@ def todo_delete(id):
 
     # データの再読み込み
     cur = con.execute(
-        "SELECT ID, TODO, LIMITDATE FROM todolist ORDER BY ID")
+        "SELECT ID, TODO, LIMITDATE, (julianday(LIMITDATE) - julianday(CURRENT_TIMESTAMP)) FROM todolist ORDER BY LIMITDATE")
     data = cur.fetchall()
     con.close()
 
@@ -109,7 +110,7 @@ def todo_edit(id):
     con = get_db()
 
     # データの読み込み
-    sql = "SELECT ID, TODO, LIMITDATE FROM todolist WHERE ID = {};".format(id)
+    sql = "SELECT ID, TODO, LIMITDATE, (julianday(LIMITDATE) - julianday(CURRENT_TIMESTAMP)) FROM todolist WHERE ID = {};".format(id)
     cur = con.execute(sql)
     data = cur.fetchall()
     con.close()

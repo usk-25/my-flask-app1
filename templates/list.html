@@ -19,19 +19,22 @@
         <tbody>
             {% for item in data %}
             <tr>
-                <th scope="row">{{item[0]}}</th>
-                <td>{{item[1]}}</td>
-                <td>{{item[2]}}</td>
-                <td>
-                    <form action="{{ url_for('todo_edit', id = item[0]) }}" method="POST">
-                        <input class="btn btn-primary btn-sm" type="submit" value="編集">
-                    </form>
-                </td>
-                <td>
-                    <form action="{{ url_for('todo_delete', id = item[0]) }}" method="POST">
-                        <input class="btn btn-outline-danger btn-sm" type="submit" value="削除">
-                    </form>
-                </td>
+                {% if item[3] < 0 %} <th scope="row" class="text-danger">期限切れ</th>
+                    {% elif item[3] < 7 %} <th scope="row" class="text-warning">あと数日</th>
+                        {% else %} <th scope="row" class="text-info">1週間以上</th>
+                        {% endif %}
+                        <td>{{item[1]}}</td>
+                        <td>{{item[2]}}</td>
+                        <td>
+                            <form action="{{ url_for('todo_edit', id = item[0]) }}" method="POST">
+                                <input class="btn btn-primary btn-sm" type="submit" value="編集">
+                            </form>
+                        </td>
+                        <td>
+                            <form action="{{ url_for('todo_delete', id = item[0]) }}" method="POST">
+                                <input class="btn btn-outline-danger btn-sm" type="submit" value="削除">
+                            </form>
+                        </td>
             </tr>
             {% endfor %}
         </tbody>
