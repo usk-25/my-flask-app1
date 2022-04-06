@@ -17,9 +17,11 @@ def add():
         req2 = request.form['toDoDate']
         return f'POST受け取りました: {req1} {req2}'
 
-# @app.route('/list')
-# def add():
-#     return render_template('list.html')
+
+@app.route('/list', methods=['GET', 'POST'])
+def list():
+    if request.method == 'GET':
+        return render_template('list.html')
 
 
 # @app.route('/edit')
