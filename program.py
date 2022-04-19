@@ -1,5 +1,5 @@
 import sqlite3
-from flask import Flask, render_template, request, g
+from flask import Flask, redirect, render_template, request, g, url_for
 
 app = Flask(__name__)
 
@@ -43,20 +43,17 @@ def add():
         con.commit()
 
         # データの再読み込み
-        cur = con.execute(
-            "SELECT ID, TODO, LIMITDATE, (julianday(LIMITDATE) - julianday(CURRENT_TIMESTAMP)) FROM todolist ORDER BY LIMITDATE")
-        data = cur.fetchall()
+        # data = get_todolist(con)
         con.close()
 
-        return render_template('list.html', data=data)
+        # return render_template('list.html', data=data)
+        return redirect(url_for('list'))
 
 
 @app.route('/list')
 def list():
     con = get_db()
-    cur = con.execute(
-        "SELECT ID, TODO, LIMITDATE, (julianday(LIMITDATE) - julianday(CURRENT_TIMESTAMP)) FROM todolist ORDER BY LIMITDATE")
-    data = cur.fetchall()
+    data = get_todolist(con)
     con.close()
     return render_template('list.html', data=data)
 
@@ -77,9 +74,7 @@ def edit():
     con.commit()
 
     # データの再読み込み
-    cur = con.execute(
-        "SELECT ID, TODO, LIMITDATE, (julianday(LIMITDATE) - julianday(CURRENT_TIMESTAMP)) FROM todolist ORDER BY LIMITDATE")
-    data = cur.fetchall()
+    data = get_todolist(con)
     con.close()
 
     return render_template('list.html', data=data)
@@ -96,9 +91,7 @@ def todo_delete(id):
     con.commit()
 
     # データの再読み込み
-    cur = con.execute(
-        "SELECT ID, TODO, LIMITDATE, (julianday(LIMITDATE) - julianday(CURRENT_TIMESTAMP)) FROM todolist ORDER BY LIMITDATE")
-    data = cur.fetchall()
+    data = get_todolist(con)
     con.close()
 
     return render_template('list.html', data=data)
@@ -116,6 +109,16 @@ def todo_edit(id):
     con.close()
 
     return render_template('edit.html', data=data)
+
+# データベース処理
+
+
+def get_todolist(con):
+    cur = con.execute(
+        "SELECT ID, TODO, LIMITDATE, (julianday(LIMITDATE) - julianday(CURRENT_TIMESTAMP)) FROM todolist ORDER BY LIMITDATE")
+    data = cur.fetchall()
+
+    return data
 
 
 if __name__ == '__main__':
